@@ -1,6 +1,6 @@
 ---
-title: "git_collab"
-author: "Hannah Grosse"
+title: "Final Project"
+author: "Jonah Brumback, Hannah Grosse, and Jon Kazor"
 date: "4/12/2022"
 output: html_document
 ---
@@ -9,14 +9,43 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+#loading libraries
+#my gt doesn't work, so I commented it out 
+library(tidyverse)     # for data cleaning and plotting
+library(gardenR)       # for Lisa's garden data
+library(lubridate)     # for date manipulation
+library(openintro)     # for the abbr2state() function
+library(patchwork)     # for nicely combining ggplot2 graphs  
+#library(gt)            # for creating nice tables
+library(rvest)         # for scraping data
+library(robotstxt)     # for checking if you can scrape data
+library(janitor)       # for cleaning names
+
+library(maps)          # for map data
+library(ggmap)         # for mapping points on maps
+library(gplots)        # for col2hex() function
+library(RColorBrewer)  # for color palettes
+library(sf)            # for working with spatial data
+library(leaflet)       # for highly customizable mapping
+library(ggthemes)      # for more themes (including theme_map())
+library(plotly)        # for the ggplotly() - basic interactivity
+library(gganimate)     # for adding animation layers to ggplots
+library(transformr)    # for "tweening" (gganimate)
+library(gifski)        # need the library for creating gifs but don't need to load each time
+library(shiny)
+theme_set(theme_minimal())
+```
+
 ## R Markdown
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
+```{r}
+onebed_rent <- read_csv("City_MedianRentalPrice_1Bedroom.csv")
+state_price <- read_csv("Sale_Prices_State.csv")
 ```
 
 ## Including Plots
