@@ -141,7 +141,7 @@ state_price %>%
   select(mean_price_2019, everything())
 ```
 
-d
+
 
 ## Including Plots
 
