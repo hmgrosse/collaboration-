@@ -75,6 +75,71 @@ state_price %>%
 #colMeans(state_price[5,6], na.rm = TRUE)
 ```
 
+```{r}
+state_price %>% 
+  mutate( mean_price_2009 = rowMeans(select(.,`2009-01`:`2009-12`)), na.rm=TRUE) %>% 
+  select(mean_price_2009, everything())
+```
+
+```{r}
+state_price %>% 
+  mutate( mean_price_2010 = rowMeans(select(.,`2010-01`:`2010-12`)), na.rm=TRUE) %>% 
+  select(mean_price_2010, everything())
+```
+
+```{r}
+state_price %>% 
+  mutate( mean_price_2011 = rowMeans(select(.,`2011-01`:`2011-12`)), na.rm=TRUE) %>% 
+  select(mean_price_2011, everything())
+```
+
+```{r}
+state_price %>% 
+  mutate( mean_price_2012 = rowMeans(select(.,`2012-01`:`2012-12`)), na.rm=TRUE) %>% 
+  select(mean_price_2012, everything())
+```
+
+```{r}
+state_price %>% 
+  mutate( mean_price_2013 = rowMeans(select(.,`2013-01`:`2013-12`)), na.rm=TRUE) %>% 
+  select(mean_price_2013, everything())
+```
+
+```{r}
+state_price %>% 
+  mutate( mean_price_2014 = rowMeans(select(.,`2014-01`:`2014-12`)), na.rm=TRUE) %>% 
+  select(mean_price_2014, everything())
+```
+
+```{r}
+state_price %>% 
+  mutate( mean_price_2015 = rowMeans(select(.,`2015-01`:`2015-12`)), na.rm=TRUE) %>% 
+  select(mean_price_2015, everything())
+```
+
+```{r}
+state_price %>% 
+  mutate( mean_price_2016 = rowMeans(select(.,`2016-01`:`2016-12`)), na.rm=TRUE) %>% 
+  select(mean_price_2016, everything())
+```
+
+```{r}
+state_price %>% 
+  mutate( mean_price_2017 = rowMeans(select(.,`2017-01`:`2017-12`)), na.rm=TRUE) %>% 
+  select(mean_price_2017, everything())
+```
+
+```{r}
+state_price %>% 
+  mutate( mean_price_2018 = rowMeans(select(.,`2018-01`:`2018-12`)), na.rm=TRUE) %>% 
+  select(mean_price_2018, everything())
+```
+
+```{r}
+state_price %>% 
+  mutate( mean_price_2019 = rowMeans(select(.,`2019-01`:`2019-12`)), na.rm=TRUE) %>% 
+  select(mean_price_2019, everything())
+```
 
 
 
