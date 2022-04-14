@@ -172,6 +172,26 @@ animate(state_price_map, nframes = 200, end_pause = 10)
 ```
 
 
+```{r}
+city_price <- read_csv("Sale_Prices_City.csv")
+```
+```{r}
+#change to dots/points filling the cities/not the right graph for the city version
+states_map<- map_data("state") 
+
+city_price %>% 
+  mutate(RegionName = str_to_lower(`RegionName`)) %>% 
+  ggplot() + 
+  geom_map(map = states_map,
+           aes(map_id = RegionName,
+               fill = `2008-03`,
+               na.rm = TRUE)) +
+  labs(title = "Average State Sale Price in March 2008", fill = "Sale Price", caption = "Graph by Hannah Grosse, data from Zillow, map from map_data") +
+  expand_limits(x = states_map$long, y = states_map$lat) + 
+  scale_fill_viridis_c(option = "rocket", direction = -1) +
+  theme_map() + 
+  theme(legend.background = element_blank())
+```
 
 
 
