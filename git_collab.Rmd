@@ -67,6 +67,8 @@ state_price %>%
   theme_map() + 
   theme(legend.background = element_blank())
 ```
+
+
 ```{r}
 state_price %>% 
   mutate( mean_price_2008 = rowMeans(select(.,`2008-03`:`2008-12`)), na.rm=TRUE) %>% 
@@ -140,76 +142,6 @@ state_price %>%
   mutate( mean_price_2019 = rowMeans(select(.,`2019-01`:`2019-12`)), na.rm=TRUE) %>% 
   select(mean_price_2019, everything())
 ```
-
-i
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-d
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ```{r}
