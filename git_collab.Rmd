@@ -48,6 +48,29 @@ onebed_rent <- read_csv("City_MedianRentalPrice_1Bedroom.csv")
 state_price <- read_csv("Sale_Prices_State.csv")
 ```
 
+
+Tidy Tuesday Question: What is the average sale price by state, in March 2008?
+
+```{r, fig.width=19, fig.height=14, fig.alt= "This graph shows the average sale price of houses, in March of 2008. The most expensive homes average $400,000 (California), and the most inexpensive homes are under $100,000 (Oklahoma). There are some states that data was nit collected from, and those states are gray."}
+states_map<- map_data("state") 
+
+state_price %>% 
+  mutate(RegionName = str_to_lower(`RegionName`)) %>% 
+  ggplot() + 
+  geom_map(map = states_map,
+           aes(map_id = RegionName,
+               fill = `2008-03`,
+               na.rm = TRUE)) +
+  labs(title = "Average State Sale Price in March 2008", fill = "Sale Price", caption = "Graph by Hannah Grosse, data from Zillow, map from map_data") +
+  expand_limits(x = states_map$long, y = states_map$lat) + 
+  scale_fill_viridis_c(option = "rocket", direction = -1) +
+  theme_map() + 
+  theme(legend.background = element_blank())
+```
+```
+
+
+
 ## Including Plots
 
 You can also embed plots, for example:
