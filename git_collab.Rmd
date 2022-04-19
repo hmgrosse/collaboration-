@@ -93,11 +93,12 @@ state_price_averages
 ```{r}
 #this doesn't really look right- gotta check it out 
 #jon aka mr pivot- you should try to fix this
+#Lauren suggested trying to transpose which is just switching the column and rows pretty much- and we need to do this to be able to then animate the graph- to flip through the years with the average house prices
 price_averages_for_animate <- state_price_averages %>% 
   pivot_wider(names_from = RegionName,
               values_from = c(mean_price_2008, mean_price_2009, mean_price_2010, mean_price_2011, mean_price_2012, mean_price_2013, mean_price_2014, mean_price_2015, mean_price_2016, mean_price_2017, mean_price_2018, mean_price_2019))
  
-
+#I don't think we need any of the code below- I had just tried it earlier
 # separate(year,
            #into = c("year"),
            #convert = TRUE) %>%
@@ -142,6 +143,8 @@ city_price <- read_csv("Sale_Prices_City.csv")
 ```
 ```{r}
 #change to dots/points filling the cities/not the right graph for the city version
+#don't think we will end up using this graph - going to hone in on individual cities/states- and see if price changes follow what we might expect when natural disasters hit
+
 states_map<- map_data("state") 
 
 city_price %>% 
