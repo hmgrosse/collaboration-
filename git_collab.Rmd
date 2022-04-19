@@ -96,7 +96,7 @@ price_averages_for_animate <- t(state_price_averages)
 
 
 ```{r}
-#have to edit with new means values shared by Jonah
+#Okay with the pivot thing I made above we now just have to figure out how to apply/use that in a map(:
 states_map<- map_data("state") 
 
 state_price_map <- price_averages_for_animate %>% 
