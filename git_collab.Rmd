@@ -70,78 +70,27 @@ state_price %>%
 
 
 ```{r}
-state_price %>% 
-  mutate( mean_price_2008 = rowMeans(select(.,`2008-03`:`2008-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2008, everything())
+state_price_averages <- state_price %>% 
+  mutate( mean_price_2008 = rowMeans(select(.,`2008-03`:`2008-12`)), na.rm=TRUE,
+          mean_price_2009 = rowMeans(select(.,`2009-01`:`2009-12`)), na.rm=TRUE,
+          mean_price_2010 = rowMeans(select(.,`2010-01`:`2010-12`)), na.rm=TRUE,
+          mean_price_2011 = rowMeans(select(.,`2011-01`:`2011-12`)), na.rm=TRUE,
+          mean_price_2012 = rowMeans(select(.,`2012-01`:`2012-12`)), na.rm=TRUE,
+          mean_price_2013 = rowMeans(select(.,`2013-01`:`2013-12`)), na.rm=TRUE,
+          mean_price_2014 = rowMeans(select(.,`2014-01`:`2014-12`)), na.rm=TRUE,
+          mean_price_2015 = rowMeans(select(.,`2015-01`:`2015-12`)), na.rm=TRUE,
+          mean_price_2016 = rowMeans(select(.,`2016-01`:`2016-12`)), na.rm=TRUE,
+          mean_price_2017 = rowMeans(select(.,`2017-01`:`2017-12`)), na.rm=TRUE,
+          mean_price_2018 = rowMeans(select(.,`2018-01`:`2018-12`)), na.rm=TRUE,
+          mean_price_2019 = rowMeans(select(.,`2019-01`:`2019-12`)), na.rm=TRUE) %>% 
+  select(RegionName, mean_price_2008, mean_price_2009, mean_price_2010, mean_price_2011, mean_price_2012, mean_price_2013, mean_price_2014, mean_price_2015, mean_price_2016, mean_price_2017, mean_price_2018, mean_price_2019)
+
+state_price_averages
 
 #colMeans(state_price[5,6], na.rm = TRUE)
 ```
 
-```{r}
-state_price %>% 
-  mutate( mean_price_2009 = rowMeans(select(.,`2009-01`:`2009-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2009, everything())
-```
 
-```{r}
-state_price %>% 
-  mutate( mean_price_2010 = rowMeans(select(.,`2010-01`:`2010-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2010, everything())
-```
-
-```{r}
-state_price %>% 
-  mutate( mean_price_2011 = rowMeans(select(.,`2011-01`:`2011-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2011, everything())
-```
-
-```{r}
-state_price %>% 
-  mutate( mean_price_2012 = rowMeans(select(.,`2012-01`:`2012-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2012, everything())
-```
-
-```{r}
-state_price %>% 
-  mutate( mean_price_2013 = rowMeans(select(.,`2013-01`:`2013-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2013, everything())
-```
-
-```{r}
-state_price %>% 
-  mutate( mean_price_2014 = rowMeans(select(.,`2014-01`:`2014-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2014, everything())
-```
-
-```{r}
-state_price %>% 
-  mutate( mean_price_2015 = rowMeans(select(.,`2015-01`:`2015-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2015, everything())
-```
-
-```{r}
-state_price %>% 
-  mutate( mean_price_2016 = rowMeans(select(.,`2016-01`:`2016-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2016, everything())
-```
-
-```{r}
-state_price %>% 
-  mutate( mean_price_2017 = rowMeans(select(.,`2017-01`:`2017-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2017, everything())
-```
-
-```{r}
-state_price %>% 
-  mutate( mean_price_2018 = rowMeans(select(.,`2018-01`:`2018-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2018, everything())
-```
-
-```{r}
-state_price %>% 
-  mutate( mean_price_2019 = rowMeans(select(.,`2019-01`:`2019-12`)), na.rm=TRUE) %>% 
-  select(mean_price_2019, everything())
-```
 
 
 ```{r}
@@ -164,7 +113,7 @@ state_price_map <- state_price %>%
   theme(legend.background = element_blank()) + 
   transition_states(date, transition_length = 0)
 
-animate(state_price_map, nframes = 200, end_pause = 10) 
+#animate(state_price_map, nframes = 200, end_pause = 10) 
 
 #idk if I need to do this, just did it for the other code ran/animated
 #state_price %>% 
@@ -192,7 +141,6 @@ city_price %>%
   theme_map() + 
   theme(legend.background = element_blank())
 ```
-
 
 
 ## Including Plots
