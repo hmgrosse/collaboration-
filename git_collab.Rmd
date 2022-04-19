@@ -90,6 +90,22 @@ state_price_averages
 #colMeans(state_price[5,6], na.rm = TRUE)
 ```
 
+```{r}
+#this doesn't really look right- gotta check it out 
+#jon aka mr pivot- you should try to fix this
+price_averages_for_animate <- state_price_averages %>% 
+  pivot_wider(names_from = RegionName,
+              values_from = c(mean_price_2008, mean_price_2009, mean_price_2010, mean_price_2011, mean_price_2012, mean_price_2013, mean_price_2014, mean_price_2015, mean_price_2016, mean_price_2017, mean_price_2018, mean_price_2019))
+ 
+
+# separate(year,
+           #into = c("year"),
+           #convert = TRUE) %>%
+#  mutate(RegionName = str_squish(RegionName))
+
+#c(mean_price_2008, mean_price_2009, mean_price_2010, mean_price_2011, mean_price_2012, mean_price_2013, mean_price_2014, mean_price_2015, mean_price_2016, mean_price_2017, mean_price_2018, mean_price_2019)
+#cols = starts_with("mean_price")
+```
 
 
 
@@ -97,7 +113,7 @@ state_price_averages
 #have to edit with new means values shared by Jonah
 states_map<- map_data("state") 
 
-state_price_map <- state_price %>% 
+state_price_map <- price_averages_for_animate %>% 
   mutate(RegionName = str_to_lower(`RegionName`)) %>% 
   ggplot() + 
   geom_map(map = states_map,
