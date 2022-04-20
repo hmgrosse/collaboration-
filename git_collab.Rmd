@@ -92,6 +92,11 @@ state_price_averages
 
 ```{r}
 price_averages_for_animate <- t(state_price_averages)
+
+prices_to_graph <- price_averages_for_animate %>%
+    row_to_names(row_number = 1) %>%
+    type.convert(as.is = TRUE) %>%
+    as_tibble
 ```
 
 
@@ -103,7 +108,7 @@ state_price_map <- price_averages_for_animate %>%
   mutate(RegionName = str_to_lower(`RegionName`)) %>% 
   ggplot() + 
   geom_map(map = states_map,
-           aes(map_id = RegionName,
+           aes(map_id = row.names(RegionName),
                fill = `2008-03`,
                na.rm = TRUE)) +
   labs(title = "Average State Sale Price in March 2008", 
