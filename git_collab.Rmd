@@ -120,14 +120,33 @@ anim_save("state_price_year.gif")
 knitr::include_graphics("state_price_year.gif")
 ```
 
-
-
-## Including Plots
-
-You can also embed plots, for example:
+Line graphs showing the storm effects- 
 
 ```{r}
-
+#hurricane sandy- line graphs showing the price changes over the 
 ```
+
+```{r}
+#have to edit this slightly to use the month by month data- 
+hurricane_sandy <- mean_price_year %>% 
+  mutate(RegionName = str_to_lower(`RegionName`)) %>% 
+  group_by(mean_price) %>% 
+  arrange(mean_price) %>%
+  select(RegionName == c(florida, georgia, south carolina, north carolina, virginia, maryland, deleware, pennsylvania, new jersey, new york, connceticut, rhode island, massacheusettes, new hampshire, maine))
+  ggplot(aes(y = value, 
+             x = mean_price, 
+             fill = fct_reorder(RegionName, value))) +
+  geom_line() + 
+  geom_text(aes(label = RegionName))+
+  labs(title = "Cumulative Tomato Harvest by Variety",
+       subtitle = "Date: {frame_along}",
+      x = "",
+      y = "Weight (lbs)",
+      color = "RegionName",
+      fill = "Tomato Variety") + 
+  scale_color_gradientn(colors = rainbow(12))+
+  transition_reveal(mean_price)
+```
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
