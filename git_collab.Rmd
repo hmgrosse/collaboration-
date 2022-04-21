@@ -123,12 +123,26 @@ Line graphs showing the storm effects-
 #hurricane sandy- line graphs showing the price changes over the 
 ```
 
+
+```{r}
+#want to do this but to the original table- will be v fat, but thats okay, 
+price_by_month <- state_price %>% 
+  pivot_longer(cols = -c("RegionName", "...1", "RegionID", "SizeRank"),
+    names_to = "month_average") %>% 
+  select(RegionName, month_average, value)
+
+data_for_sandy <- price_by_month %>% 
+  filter(RegionName == c("florida", "georgia", "south carolina", "north carolina", "virginia", "maryland", "deleware", "pennsylvania", "new jersey", "new york", "connceticut", "rhode island", "massacheusettes", "new hampshire", "maine"))
+```
+
+
 ```{r}
 #have to edit this slightly to use the month by month data- 
-hurricane_sandy <- mean_price_year %>% 
-  mutate(RegionName = str_to_lower(`RegionName`)) %>% 
-  group_by(mean_price) %>% 
-  arrange(mean_price) %>%
+hurricane_sandy <- price_by_month %>% 
+  mutate(RegionName = str_to_lower(`RegionName`), 
+         na.rm = TRUE) %>% 
+  group_by(month_average) %>% 
+  arrange(month_average) %>%
   filter(RegionName == c("florida", "georgia", "south carolina", "north carolina", "virginia", "maryland", "deleware", "pennsylvania", "new jersey", "new york", "connceticut", "rhode island", "massacheusettes", "new hampshire", "maine")) %>% 
   ggplot(aes(y = value, 
              x = mean_price, 
