@@ -49,25 +49,6 @@ state_price <- read_csv("Sale_Prices_State.csv")
 ```
 
 
-Tidy Tuesday Question: What is the average sale price by state, in March 2008?
-
-```{r, fig.width=19, fig.height=14, fig.alt= "This graph shows the average sale price of houses, in March of 2008. The most expensive homes average $400,000 (California), and the most inexpensive homes are under $100,000 (Oklahoma). There are some states that data was nit collected from, and those states are gray."}
-states_map<- map_data("state") 
-
-state_price %>% 
-  mutate(RegionName = str_to_lower(`RegionName`)) %>% 
-  ggplot() + 
-  geom_map(map = states_map,
-           aes(map_id = RegionName,
-               fill = `2008-03`,
-               na.rm = TRUE)) +
-  labs(title = "Average State Sale Price in March 2008", fill = "Sale Price", caption = "Graph by Hannah Grosse, data from Zillow, map from map_data") +
-  expand_limits(x = states_map$long, y = states_map$lat) + 
-  scale_fill_viridis_c(option = "rocket", direction = -1) +
-  theme_map() + 
-  theme(legend.background = element_blank())
-```
-
 
 ```{r}
 state_price_averages <- state_price %>% 
@@ -87,69 +68,58 @@ state_price_averages <- state_price %>%
 
 state_price_averages
 
-#colMeans(state_price[5,6], na.rm = TRUE)
 ```
 
 ```{r}
-price_averages_for_animate <- t(state_price_averages)
-
-prices_to_graph <- price_averages_for_animate %>%
-    row_to_names(row_number = 1) %>%
-    type.convert(as.is = TRUE) %>%
-    as_tibble
+mean_price_year <- state_price_averages %>% 
+  pivot_longer(cols = -RegionName,
+    names_to = "mean_price")
 ```
 
 
-```{r}
-#Okay with the pivot thing I made above we now just have to figure out how to apply/use that in a map(:
+
+
+```{r, fig.alt= "This graph shows the average sale price of houses, by state, for each year 2008-2019. The most expensive homes were consistently found in California each year, and the most inexpensive homes are are found in Oklahoma. The more expensive the average price, the darker it is. The average sale price increases for most homes over this time period. When there is no data the states are gray."}
 states_map<- map_data("state") 
 
-state_price_map <- price_averages_for_animate %>% 
+state_price_year <- mean_price_year %>% 
   mutate(RegionName = str_to_lower(`RegionName`)) %>% 
+  group_by(mean_price) %>% 
+  arrange(mean_price) %>% 
   ggplot() + 
   geom_map(map = states_map,
-           aes(map_id = row.names(RegionName),
-               fill = `2008-03`,
-               na.rm = TRUE)) +
-  labs(title = "Average State Sale Price in March 2008", 
-       fill = "Sale Price", 
-       caption = "Graph by Hannah Grosse, data from Zillow, map from map_data") +
+           aes(map_id = RegionName,
+               fill = value,
+               group = mean_price),
+               na.rm = TRUE) +
+  labs(title = "Average State House Sale Price by Year", 
+       subtitle = "Year: {closest_state}",
+       fill = "Average Sale Price", 
+       caption = "Graph by Hannah, Jonah, & Jon, data from Zillow, map from map_data") +
   expand_limits(x = states_map$long, y = states_map$lat) + 
   scale_fill_viridis_c(option = "rocket", direction = -1) +
   theme_map() + 
-  theme(legend.background = element_blank()) + 
-  transition_states(date, transition_length = 0)
+  theme(legend.background = element_blank()) +
+ transition_states(mean_price, transition_length = 0)
 
-#animate(state_price_map, nframes = 200, end_pause = 10) 
+state_price_year
+
+animate(state_price_year, nframes = 200, end_pause = 10) 
 
 #idk if I need to do this, just did it for the other code ran/animated
 #state_price %>% 
   #mutate(RegionName = str_to_lower(`RegionName`))
 ```
 
+```{r}
+anim_save("state_price_year.gif")
+```
+
 
 ```{r}
-city_price <- read_csv("Sale_Prices_City.csv")
+knitr::include_graphics("state_price_year.gif")
 ```
-```{r}
-#change to dots/points filling the cities/not the right graph for the city version
-#don't think we will end up using this graph - going to hone in on individual cities/states- and see if price changes follow what we might expect when natural disasters hit
 
-states_map<- map_data("state") 
-
-city_price %>% 
-  mutate(RegionName = str_to_lower(`RegionName`)) %>% 
-  ggplot() + 
-  geom_map(map = states_map,
-           aes(map_id = RegionName,
-               fill = `2008-03`,
-               na.rm = TRUE)) +
-  labs(title = "Average State Sale Price in March 2008", fill = "Sale Price", caption = "Graph by Hannah Grosse, data from Zillow, map from map_data") +
-  expand_limits(x = states_map$long, y = states_map$lat) + 
-  scale_fill_viridis_c(option = "rocket", direction = -1) +
-  theme_map() + 
-  theme(legend.background = element_blank())
-```
 
 
 ## Including Plots
