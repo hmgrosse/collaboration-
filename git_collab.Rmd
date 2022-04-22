@@ -47,8 +47,11 @@ When you click the **Knit** button a document will be generated that includes bo
 onebed_rent <- read_csv("City_MedianRentalPrice_1Bedroom.csv")
 state_price <- read_csv("Sale_Prices_State.csv")
 ```
+Housing in the United States plays a crucial role in the state of our economy. As housing prices reflect neighborhood value, the money poured into housing directly impacts other essential aspects of community development. Things like green space, schools, and public transit all hold significant impacts on the desirability of neighborhoods, thus directly affecting housing prices and public funding. 
+	Americans are currently facing a national surge in housing prices. According to Pew Research Center, nearly 50% of Americans say that affordable housing has become a major problem. While this issue can be seen all across the country and across all age demographics, the problem is most prevalent among young people in urban areas. Cities like New York, Los Angeles, and Boston have become almost completely unaffordable for someone working an entry or lower-level job, forcing people to expand further and further outside city lines. 
+	Despite this vast need for more homes, government spending tends to cater to amenities in already wealthy neighborhoods, rather than affordable units in newly gentrified and increasingly inaccessible areas. Rather than focusing on building more duplexes, affordable apartments, mother-in-law units, and other diverse housing options, we have seen a rapid rise in the gentrification-core buildings that we now know all too well (pictured). 
 
-
+!(Gentrification-Core Building Example)[building_ds.png] 
 
 ```{r}
 state_price_averages <- state_price %>% 
