@@ -135,6 +135,7 @@ data_for_sandy <- price_by_month %>%
   filter(RegionName == c("florida", "georgia", "south carolina", "north carolina", "virginia", "maryland", "deleware", "pennsylvania", "new jersey", "new york", "connceticut", "rhode island", "massacheusettes", "new hampshire", "maine"))
 ```
 
+Most issues are in the manipulation of data - our line graphs are not running. We will likely also change some of the natural disaster graphs to be slightly different from line graphs- just because as it is there are a lot of them.
 
 ```{r}
 #its using data in the month by month form - but I keep getting the "longer object length is not a multiple of shorter object length"
@@ -156,6 +157,31 @@ hurricane_sandy <- price_by_month %>%
   labs(title = "Average State Sale Price by Month",
        subtitle = "Date: {frame_along}",
       x = "",
+      y = "Time (months)",
+      color = "State",
+      fill = "Average Sale Price by Month") + 
+  scale_color_gradientn(colors = rainbow(12))+
+  transition_reveal(month_average)
+```
+```{r}
+#this one is adjusted for the wildfires
+wildfires <- price_by_month %>% 
+  mutate(RegionName = str_to_lower(`RegionName`), 
+         na.rm = TRUE) %>% 
+  group_by(month_average) %>% 
+  arrange(month_average) %>%
+  #complete(RegionName, 
+           #month_average, 
+           #fill = list(value = 0)) %>% 
+  filter(month_average == c("2018-01","2018-02","2018-03","2018-04","2018-05","2018-06","2018-07","2018-08","2018-09","2018-10","2018-11","2018-12","2019-01","2019-02","2019-03","2019-04","2019-05","2019-06","2019-07","2019-08","2019-09","2019-10","2019-11","2019-12"),
+    RegionName == c("california", "oregon", "washington")) %>% 
+  ggplot(aes(y = value, 
+             x = month_average)) +
+  geom_line() + 
+  geom_text(aes(label = RegionName))+
+  labs(title = "Average State Sale Price by Month",
+       subtitle = "Date: {frame_along}",
+      x = "",
       y = "Weight (lbs)",
       color = "State",
       fill = "Average Sale Price by Month") + 
@@ -163,5 +189,56 @@ hurricane_sandy <- price_by_month %>%
   transition_reveal(month_average)
 ```
 
+```{r}
+#this one is adjusted right to the second hurricane 
+hurricane_harvey <- price_by_month %>% 
+  mutate(RegionName = str_to_lower(`RegionName`), 
+         na.rm = TRUE) %>% 
+  group_by(month_average) %>% 
+  arrange(month_average) %>%
+  #complete(RegionName, 
+           #month_average, 
+           #fill = list(value = 0)) %>% 
+  filter(RegionName == "texas",
+         month_average == c("2017-03","2017-04","2017-05","2017-06","2017-07","2017-08","2017-09","2017-10","2017-11","2017-12","2018-01","2018-02","2018-03")) %>% 
+  ggplot(aes(y = value, 
+             x = month_average)) +
+  geom_line() + 
+  geom_text(aes(label = RegionName))+
+  labs(title = "Average State Sale Price by Month",
+       subtitle = "Date: {frame_along}",
+      x = "",
+      y = "Time (months)",
+      color = "State",
+      fill = "Average Sale Price by Month") + 
+  scale_color_gradientn(colors = rainbow(12))+
+  transition_reveal(month_average)
+```
+
+```{r}
+#the one set with the proper states and the right timeline for the natural disaster
+tornado_outbreak <- price_by_month %>% 
+  mutate(RegionName = str_to_lower(`RegionName`), 
+         na.rm = TRUE) %>% 
+  group_by(month_average) %>% 
+  arrange(month_average) %>%
+  #complete(RegionName, 
+           #month_average, 
+           #fill = list(value = 0)) %>% 
+  filter(month_average == c("2011-04","2011-05","2011-06","2011-07","2011-08","2011-09","2011-10","2011-11","2011-12","2012-01","2012-02","2012-03","2012-04"),
+    RegionName == c("alabama", "mississippi", "tennessee", "arkansas", "virginia", "georgia", "kentucky", "louisiana", "new york")) %>% 
+  ggplot(aes(y = value, 
+             x = month_average)) +
+  geom_line() + 
+  geom_text(aes(label = RegionName))+
+  labs(title = "Average State Sale Price by Month",
+       subtitle = "Date: {frame_along}",
+      x = "",
+      y = "Time (months)",
+      color = "State",
+      fill = "Average Sale Price by Month") + 
+  scale_color_gradientn(colors = rainbow(12))+
+  transition_reveal(month_average)
+```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
