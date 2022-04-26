@@ -148,7 +148,7 @@ With this data, we also wanted to explore the impact of natural disasters on var
 
 Most issues are in the manipulation of data - our line graphs are not running. We will likely also change some of the natural disaster graphs to be slightly different from line graphs- just because as it is there are a lot of them.
 
-```{r}
+```{r, fig.width = 11, fig.height = 5}
 #its using data in the month by month form - but I keep getting the "longer object length is not a multiple of shorter object length"
 #I thought the complete might help fill some of the length issues - it did not
 hurricane_sandy <- price_by_month %>% 
@@ -159,21 +159,25 @@ hurricane_sandy <- price_by_month %>%
   #complete(RegionName, 
            #month_average, 
            #fill = list(value = 0)) %>% 
-  filter(month_average == c("2012-01","2012-02","2012-03","2012-04","2012-05","2012-06","2012-07","2012-08","2012-09","2012-10","2012-11","2012-12","2013-01","2013-02","2013-03","2013-04","2013-05","2013-06","2013-07","2013-08","2013-09","2013-10","2013-11","2013-12"),
-    RegionName == c("florida", "georgia", "south carolina", "north carolina", "virginia", "maryland", "deleware", "pennsylvania", "new jersey", "new york", "connceticut", "rhode island", "massacheusettes", "new hampshire", "maine")) %>% 
+  filter(month_average %in% c("2012-06","2012-07","2012-08","2012-09","2012-10","2012-11","2012-12","2013-01","2013-02","2013-03","2013-04","2013-05","2013-06"),
+    RegionName %in% c("florida", "georgia", "south carolina", "north carolina", "virginia", "maryland", "deleware", "pennsylvania", "new jersey", "new york", "connceticut", "rhode island", "massacheusettes", "new hampshire", "maine")) %>% 
   ggplot(aes(y = value, 
-             x = month_average)) +
-  geom_line() + 
-  geom_text(aes(label = RegionName))+
+             x = month_average,
+             group = RegionName,
+             color = RegionName,
+             col = RegionName)) +
+  geom_line() +
   labs(title = "Average State Sale Price by Month",
-       subtitle = "Date: {frame_along}",
+       #subtitle = "Date: {frame_along}",
       x = "",
-      y = "Time (months)",
+      y = "Average House Price",
       color = "State",
-      fill = "Average Sale Price by Month") + 
-  scale_color_gradientn(colors = rainbow(12))+
-  transition_reveal(month_average)
+      fill = "Average Sale Price by Month")
+
+hurricane_sandy
 ```
+
+
 ```{r}
 #this one is adjusted for the wildfires
 wildfires <- price_by_month %>% 
