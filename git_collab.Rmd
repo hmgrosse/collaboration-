@@ -146,7 +146,7 @@ data_for_sandy <- price_by_month %>%
 	Finally, in order to examine a diverse selection of natural disasters, we looked into the 2011 tornado super outbreak that spread across the Southeast US. Over the course of 3 days from August 25 to 28, there were 360 tornados across Alabama, Mississippi, Tennessee, Arkansas, Georgia, Kentucky, Louisiana, Virginia, and New York. About half were concentrated in Alabama, Mississippi, and Tennessee, and these states saw the most damage from the outbreak. A graph depicting the change in housing prices during this time is shown below. 
 
 
-```{r, fig.width = 11, fig.height = 5}
+```{r, fig.width = 13, fig.height = 5}
 #I think this looks pretty good - The dots are the month when Hurricane Sandy primarily hit/was at its peak- but I think it could be labeled? / I'm also not sure if the hurricane was only during that one month- so maybe it's not worth it to include
 sandy_labels <- price_by_month %>% 
    mutate(RegionName = str_to_lower(`RegionName`), 
@@ -191,7 +191,7 @@ hurricane_sandy
 ```
 
 
-```{r}
+```{r, fig.height = 5, fig.width = 13}
 #this one is adjusted for the wildfires
 wildfire_labels <- price_by_month %>% 
    mutate(RegionName = str_to_lower(`RegionName`), 
@@ -237,55 +237,85 @@ wildfires
 ```
 
 ```{r}
-#this one is adjusted right to the second hurricane 
+#this one is adjusted right to the second hurricane
+
+harvey_points <- price_by_month %>% 
+   mutate(RegionName = str_to_lower(`RegionName`), 
+         na.rm = TRUE) %>% 
+  group_by(month_average) %>% 
+  arrange(month_average) %>%
+  filter(month_average %in% c("2017-08","2017-09"),
+         RegionName == "texas")
+
+
 hurricane_harvey <- price_by_month %>% 
   mutate(RegionName = str_to_lower(`RegionName`), 
          na.rm = TRUE) %>% 
   group_by(month_average) %>% 
-  arrange(month_average) %>%
-  #complete(RegionName, 
-           #month_average, 
-           #fill = list(value = 0)) %>% 
+  arrange(month_average) %>% 
   filter(RegionName == "texas",
-         month_average == c("2017-03","2017-04","2017-05","2017-06","2017-07","2017-08","2017-09","2017-10","2017-11","2017-12","2018-01","2018-02","2018-03")) %>% 
-  ggplot(aes(y = value, 
-             x = month_average)) +
-  geom_line() + 
-  geom_text(aes(label = RegionName))+
+         month_average %in% c("2017-03","2017-04","2017-05","2017-06","2017-07","2017-08","2017-09","2017-10","2017-11","2017-12","2018-01","2018-02","2018-03")) %>% 
+   ggplot(aes(y = value, 
+             x = month_average,
+             #group = RegionName,
+             color = RegionName)) +
+  geom_line(fill = "orange", color = "orange") +
+  geom_point(data = harvey_points, color = "black", size = 1.5) + 
   labs(title = "Average State Sale Price by Month",
-       subtitle = "Date: {frame_along}",
       x = "",
-      y = "Time (months)",
+      y = "Average House Price",
       color = "State",
-      fill = "Average Sale Price by Month") + 
-  scale_color_gradientn(colors = rainbow(12))+
-  transition_reveal(month_average)
+      fill = "Average Sale Price by Month") +
+  #geom_label_repel(data = harvey_labels,
+                #   aes(label = "texas"),
+                  # na.rm = TRUE) +
+  theme(legend.position = "right")
+
+hurricane_harvey
 ```
 
-```{r}
+```{r, fig.height = 5, fig.width = 13}
 #the one set with the proper states and the right timeline for the natural disaster
+tornado_labels <- price_by_month %>% 
+   mutate(RegionName = str_to_lower(`RegionName`), 
+         na.rm = TRUE) %>% 
+  group_by(month_average) %>% 
+  arrange(month_average) %>%
+  filter(month_average == "2012-04",
+         RegionName %in% c("alabama", "mississippi", "tennessee", "arkansas", "virginia", "georgia", "kentucky", "louisiana", "new york"))
+
+tornado_points <- price_by_month %>% 
+   mutate(RegionName = str_to_lower(`RegionName`), 
+         na.rm = TRUE) %>% 
+  group_by(month_average) %>% 
+  arrange(month_average) %>%
+  filter(month_average == "2011-08",
+         RegionName %in% c("alabama", "mississippi", "tennessee", "arkansas", "virginia", "georgia", "kentucky", "louisiana", "new york"))
+
 tornado_outbreak <- price_by_month %>% 
   mutate(RegionName = str_to_lower(`RegionName`), 
          na.rm = TRUE) %>% 
   group_by(month_average) %>% 
   arrange(month_average) %>%
-  #complete(RegionName, 
-           #month_average, 
-           #fill = list(value = 0)) %>% 
-  filter(month_average == c("2011-04","2011-05","2011-06","2011-07","2011-08","2011-09","2011-10","2011-11","2011-12","2012-01","2012-02","2012-03","2012-04"),
-    RegionName == c("alabama", "mississippi", "tennessee", "arkansas", "virginia", "georgia", "kentucky", "louisiana", "new york")) %>% 
-  ggplot(aes(y = value, 
-             x = month_average)) +
-  geom_line() + 
-  geom_text(aes(label = RegionName))+
+  filter(month_average %in% c("2011-04","2011-05","2011-06","2011-07","2011-08","2011-09","2011-10","2011-11","2011-12","2012-01","2012-02","2012-03","2012-04"),
+    RegionName %in% c("alabama", "mississippi", "tennessee", "arkansas", "virginia", "georgia", "kentucky", "louisiana", "new york")) %>% 
+    ggplot(aes(y = value, 
+             x = month_average,
+             group = RegionName,
+             color = RegionName)) +
+  geom_line() +
+  geom_point(data = tornado_points, color = "black", size = 1.5) + 
   labs(title = "Average State Sale Price by Month",
-       subtitle = "Date: {frame_along}",
       x = "",
-      y = "Time (months)",
+      y = "Average House Price",
       color = "State",
-      fill = "Average Sale Price by Month") + 
-  scale_color_gradientn(colors = rainbow(12))+
-  transition_reveal(month_average)
+      fill = "Average Sale Price by Month") +
+  geom_label_repel(data = tornado_labels,
+                   aes(label = RegionName),
+                   na.rm = TRUE) +
+  theme(legend.position = "none")
+
+tornado_outbreak
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
