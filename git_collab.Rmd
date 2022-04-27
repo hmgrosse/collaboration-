@@ -331,6 +331,7 @@ city_data <- city_prices %>%
     names_to = "month_average") %>% 
   select(RegionName, month_average, value)
 
+
 boston_bombing <- city_prices %>% 
   mutate(RegionName = str_to_lower(`RegionName`), 
          na.rm = TRUE) %>%
