@@ -140,14 +140,11 @@ data_for_sandy <- price_by_month %>%
   filter(RegionName == c("florida", "georgia", "south carolina", "north carolina", "virginia", "maryland", "deleware", "pennsylvania", "new jersey", "new york", "connceticut", "rhode island", "massacheusettes", "new hampshire", "maine"))
 ```
 
-With this data, we also wanted to explore the impact of natural disasters on various states. Hurricanes, tornados, and wildfires all drastically impact housing availability and therefore are directly tied to the housing market. While of course there are many other factors that impact housing prices, we thought it would be really interesting to look at the years before and after major natural disasters in the US to see how the housing market could have been impacted.
+  With this data, we also wanted to explore the impact of natural disasters on various states. Hurricanes, tornados, and wildfires all drastically impact housing availability and therefore are directly tied to the housing market. While of course there are many other factors that impact housing prices, we thought it would be really interesting to look at the years before and after major natural disasters in the US to see how the housing market could have been impacted.
 	Pictures below is a graph showing the housing prices for states all along the east coast before and after Hurricane Sandy. This 2012 hurricane lasted from October 22nd to November 2nd and caused over $65 billion dollars in damages nationwide. With most of its impact being concentrated on the east coast, we can see the effect of the storm on housing availability. Among all of the states affected, New York and New Jersey were hit the hardest and faced a massive loss of homes and infrastructure. 
 	Next, we wanted to examine the effect of the 2018 California wildfires. These fires were the worst in California history, destroying more than 18,000 structures and causing $16.5 billion in damages. 
 	Finally, in order to examine a diverse selection of natural disasters, we looked into the 2011 tornado super outbreak that spread across the Southeast US. Over the course of 3 days from August 25 to 28, there were 360 tornados across Alabama, Mississippi, Tennessee, Arkansas, Georgia, Kentucky, Louisiana, Virginia, and New York. About half were concentrated in Alabama, Mississippi, and Tennessee, and these states saw the most damage from the outbreak. A graph depicting the change in housing prices during this time is shown below. 
 
-
-
-Most issues are in the manipulation of data - our line graphs are not running. We will likely also change some of the natural disaster graphs to be slightly different from line graphs- just because as it is there are a lot of them.
 
 ```{r, fig.width = 11, fig.height = 5}
 #I think this looks pretty good - The dots are the month when Hurricane Sandy primarily hit/was at its peak- but I think it could be labeled? / I'm also not sure if the hurricane was only during that one month- so maybe it's not worth it to include
@@ -172,9 +169,6 @@ hurricane_sandy <- price_by_month %>%
          na.rm = TRUE) %>% 
   group_by(month_average) %>% 
   arrange(month_average) %>%
-  #complete(RegionName, 
-           #month_average, 
-           #fill = list(value = 0)) %>% 
   filter(month_average %in% c("2012-06","2012-07","2012-08","2012-09","2012-10","2012-11","2012-12","2013-01","2013-02","2013-03","2013-04","2013-05","2013-06"),
     RegionName %in% c("florida", "georgia", "south carolina", "north carolina", "virginia", "maryland", "deleware", "pennsylvania", "new jersey", "new york", "connceticut", "rhode island", "massacheusettes", "new hampshire", "maine")) %>% 
   ggplot(aes(y = value, 
@@ -184,7 +178,6 @@ hurricane_sandy <- price_by_month %>%
   geom_line() +
   geom_point(data = sandy_points, color = "black", size = 1.5) + 
   labs(title = "Average State Sale Price by Month",
-       #subtitle = "Date: {frame_along}",
       x = "",
       y = "Average House Price",
       color = "State",
@@ -200,28 +193,47 @@ hurricane_sandy
 
 ```{r}
 #this one is adjusted for the wildfires
+wildfire_labels <- price_by_month %>% 
+   mutate(RegionName = str_to_lower(`RegionName`), 
+         na.rm = TRUE) %>% 
+  group_by(month_average) %>% 
+  arrange(month_average) %>%
+  filter(month_average == "2019-12",
+         RegionName %in% c("california", "oregon", "washington"))
+
+wildfire_points <- price_by_month %>% 
+   mutate(RegionName = str_to_lower(`RegionName`), 
+         na.rm = TRUE) %>% 
+  group_by(month_average) %>% 
+  arrange(month_average) %>%
+  filter(month_average %in% c("2018-07","2018-08"),
+         RegionName %in% c("california", "oregon", "washington"))
+
+
 wildfires <- price_by_month %>% 
   mutate(RegionName = str_to_lower(`RegionName`), 
          na.rm = TRUE) %>% 
   group_by(month_average) %>% 
   arrange(month_average) %>%
-  #complete(RegionName, 
-           #month_average, 
-           #fill = list(value = 0)) %>% 
-  filter(month_average == c("2018-01","2018-02","2018-03","2018-04","2018-05","2018-06","2018-07","2018-08","2018-09","2018-10","2018-11","2018-12","2019-01","2019-02","2019-03","2019-04","2019-05","2019-06","2019-07","2019-08","2019-09","2019-10","2019-11","2019-12"),
-    RegionName == c("california", "oregon", "washington")) %>% 
-  ggplot(aes(y = value, 
-             x = month_average)) +
-  geom_line() + 
-  geom_text(aes(label = RegionName))+
+  filter(month_average %in% c("2018-01","2018-02","2018-03","2018-04","2018-05","2018-06","2018-07","2018-08","2018-09","2018-10","2018-11","2018-12","2019-01","2019-02","2019-03","2019-04","2019-05","2019-06","2019-07","2019-08","2019-09","2019-10","2019-11","2019-12"),
+    RegionName %in% c("california", "oregon", "washington")) %>% 
+   ggplot(aes(y = value, 
+             x = month_average,
+             group = RegionName,
+             color = RegionName)) +
+  geom_line() +
+  geom_point(data = wildfire_points, color = "black", size = 1.5) + 
   labs(title = "Average State Sale Price by Month",
-       subtitle = "Date: {frame_along}",
       x = "",
-      y = "Weight (lbs)",
+      y = "Average House Price",
       color = "State",
-      fill = "Average Sale Price by Month") + 
-  scale_color_gradientn(colors = rainbow(12))+
-  transition_reveal(month_average)
+      fill = "Average Sale Price by Month") +
+  geom_label_repel(data = wildfire_labels,
+                   aes(label = RegionName),
+                   na.rm = TRUE) +
+  theme(legend.position = "none")
+
+wildfires
 ```
 
 ```{r}
