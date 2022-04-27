@@ -236,9 +236,11 @@ wildfires <- price_by_month %>%
 wildfires
 ```
 
+
+
 ```{r}
 #this one is adjusted right to the second hurricane
-
+#this graph is not working - because there is only one state? not sure how to make the line appear- 
 harvey_points <- price_by_month %>% 
    mutate(RegionName = str_to_lower(`RegionName`), 
          na.rm = TRUE) %>% 
@@ -273,6 +275,7 @@ hurricane_harvey <- price_by_month %>%
 
 hurricane_harvey
 ```
+
 
 ```{r, fig.height = 5, fig.width = 13}
 #the one set with the proper states and the right timeline for the natural disaster
@@ -317,5 +320,42 @@ tornado_outbreak <- price_by_month %>%
 
 tornado_outbreak
 ```
+```{r}
+city_prices <- read_csv("Sale_Prices_City.csv")
+```
+```{r}
+#have to adjust the initial dataset 
+
+city_data <- city_prices %>% 
+  pivot_longer(cols = -c("StateName", "...1", "RegionID", "SizeRank"),
+    names_to = "month_average") %>% 
+  select(RegionName, month_average, value)
+
+boston_bombing <- city_prices %>% 
+  mutate(RegionName = str_to_lower(`RegionName`), 
+         na.rm = TRUE) %>%
+  filter(RegionName == "boston",
+         month_average %in% c("2013-01","2013-02","2013-03","2013-04","2013-05","2013-06","2013-07","2013-08","2013-09","2013-10","2013-11","2013-12","2014-01","2014-02","2014-03","2014-04")) %>% 
+  ggplot(aes(y = value, 
+             x = month_average,
+             group = RegionName,
+             color = RegionName)) +
+  geom_line() +
+  geom_point(data = tornado_points, color = "black", size = 1.5) + 
+  labs(title = "Average State Sale Price by Month",
+      x = "",
+      y = "Average House Price",
+      color = "State",
+      fill = "Average Sale Price by Month") +
+  geom_label_repel(data = tornado_labels,
+                   aes(label = RegionName),
+                   na.rm = TRUE) +
+  theme(legend.position = "none")
+
+boston_bombing
+```
+
+
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
