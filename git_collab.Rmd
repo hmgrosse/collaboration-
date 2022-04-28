@@ -10,8 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-#loading libraries
-#my gt doesn't work, so I commented it out 
 library(tidyverse)     # for data cleaning and plotting
 library(gardenR)       # for Lisa's garden data
 library(lubridate)     # for date manipulation
@@ -124,21 +122,7 @@ knitr::include_graphics("state_price_year.gif")
 
 Line graphs showing the storm effects- 
 
-```{r}
-#hurricane sandy- line graphs showing the price changes over the 
-```
 
-
-```{r}
-#want to do this but to the original table- will be v fat, but thats okay, 
-price_by_month <- state_price %>% 
-  pivot_longer(cols = -c("RegionName", "...1", "RegionID", "SizeRank"),
-    names_to = "month_average") %>% 
-  select(RegionName, month_average, value)
-
-data_for_sandy <- price_by_month %>% 
-  filter(RegionName == c("florida", "georgia", "south carolina", "north carolina", "virginia", "maryland", "deleware", "pennsylvania", "new jersey", "new york", "connceticut", "rhode island", "massacheusettes", "new hampshire", "maine"))
-```
 
   With this data, we also wanted to explore the impact of natural disasters on various states. Hurricanes, tornados, and wildfires all drastically impact housing availability and therefore are directly tied to the housing market. While of course there are many other factors that impact housing prices, we thought it would be really interesting to look at the years before and after major natural disasters in the US to see how the housing market could have been impacted.
 	Pictures below is a graph showing the housing prices for states all along the east coast before and after Hurricane Sandy. This 2012 hurricane lasted from October 22nd to November 2nd and caused over $65 billion dollars in damages nationwide. With most of its impact being concentrated on the east coast, we can see the effect of the storm on housing availability. Among all of the states affected, New York and New Jersey were hit the hardest and faced a massive loss of homes and infrastructure. 
@@ -147,7 +131,15 @@ data_for_sandy <- price_by_month %>%
 
 
 ```{r, fig.width = 13, fig.height = 5}
-#I think this looks pretty good - The dots are the month when Hurricane Sandy primarily hit/was at its peak- but I think it could be labeled? / I'm also not sure if the hurricane was only during that one month- so maybe it's not worth it to include
+
+price_by_month <- state_price %>% 
+  pivot_longer(cols = -c("RegionName", "...1", "RegionID", "SizeRank"),
+    names_to = "month_average") %>% 
+  select(RegionName, month_average, value)
+
+data_for_sandy <- price_by_month %>% 
+  filter(RegionName == c("florida", "georgia", "south carolina", "north carolina", "virginia", "maryland", "deleware", "pennsylvania", "new jersey", "new york", "connceticut", "rhode island", "massacheusettes", "new hampshire", "maine"))
+
 sandy_labels <- price_by_month %>% 
    mutate(RegionName = str_to_lower(`RegionName`), 
          na.rm = TRUE) %>% 
@@ -192,7 +184,6 @@ hurricane_sandy
 
 
 ```{r, fig.height = 5, fig.width = 13}
-#this one is adjusted for the wildfires
 wildfire_labels <- price_by_month %>% 
    mutate(RegionName = str_to_lower(`RegionName`), 
          na.rm = TRUE) %>% 
@@ -259,18 +250,15 @@ hurricane_harvey <- price_by_month %>%
          month_average %in% c("2017-03","2017-04","2017-05","2017-06","2017-07","2017-08","2017-09","2017-10","2017-11","2017-12","2018-01","2018-02","2018-03")) %>% 
    ggplot(aes(y = value, 
              x = month_average,
-             #group = RegionName,
+             group = RegionName,
              color = RegionName)) +
-  geom_line(fill = "orange", color = "orange") +
+  geom_line(color = "orange") +
   geom_point(data = harvey_points, color = "black", size = 1.5) + 
-  labs(title = "Average State Sale Price by Month",
+  labs(title = "Average Texas Sale Price by Month",
       x = "",
       y = "Average House Price",
       color = "State",
       fill = "Average Sale Price by Month") +
-  #geom_label_repel(data = harvey_labels,
-                #   aes(label = "texas"),
-                  # na.rm = TRUE) +
   theme(legend.position = "right")
 
 hurricane_harvey
@@ -278,7 +266,6 @@ hurricane_harvey
 
 
 ```{r, fig.height = 5, fig.width = 13}
-#the one set with the proper states and the right timeline for the natural disaster
 tornado_labels <- price_by_month %>% 
    mutate(RegionName = str_to_lower(`RegionName`), 
          na.rm = TRUE) %>% 
@@ -323,16 +310,21 @@ tornado_outbreak
 ```{r}
 city_prices <- read_csv("Sale_Prices_City.csv")
 ```
-```{r}
-#have to adjust the initial dataset 
-
+```{r, fig.height=5, fig.width = 9}
 city_data <- city_prices %>% 
-  pivot_longer(cols = -c("StateName", "...1", "RegionID", "SizeRank"),
+  pivot_longer(cols = -c("StateName", "RegionName", "...1", "RegionID", "SizeRank"),
     names_to = "month_average") %>% 
   select(RegionName, month_average, value)
 
+bombing_points <- city_data %>% 
+   mutate(RegionName = str_to_lower(`RegionName`), 
+         na.rm = TRUE) %>% 
+  group_by(month_average) %>% 
+  arrange(month_average) %>%
+  filter(month_average == "2013-04",
+         RegionName == "boston")
 
-boston_bombing <- city_prices %>% 
+boston_bombing <- city_data %>% 
   mutate(RegionName = str_to_lower(`RegionName`), 
          na.rm = TRUE) %>%
   filter(RegionName == "boston",
@@ -342,15 +334,10 @@ boston_bombing <- city_prices %>%
              group = RegionName,
              color = RegionName)) +
   geom_line() +
-  geom_point(data = tornado_points, color = "black", size = 1.5) + 
-  labs(title = "Average State Sale Price by Month",
+  geom_point(data = bombing_points, color = "black", size = 1.5) + 
+  labs(title = "Average Boston House Sale Price by Month",
       x = "",
-      y = "Average House Price",
-      color = "State",
-      fill = "Average Sale Price by Month") +
-  geom_label_repel(data = tornado_labels,
-                   aes(label = RegionName),
-                   na.rm = TRUE) +
+      y = "Sale Price") +
   theme(legend.position = "none")
 
 boston_bombing
