@@ -1,5 +1,5 @@
 ---
-title: "Final Project"
+title: "(add something catchy here):U.S. Housing Prices and the Impact of Natural Disasters"
 author: "Jonah Brumback, Hannah Grosse, and Jon Kazor"
 date: "4/12/2022"
 output: html_document
@@ -10,27 +10,25 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-library(tidyverse)     # for data cleaning and plotting
-library(gardenR)       # for Lisa's garden data
-library(lubridate)     # for date manipulation
-library(openintro)     # for the abbr2state() function
-library(patchwork)     # for nicely combining ggplot2 graphs  
-#library(gt)            # for creating nice tables
-library(rvest)         # for scraping data
-library(robotstxt)     # for checking if you can scrape data
-library(janitor)       # for cleaning names
-
-library(maps)          # for map data
-library(ggmap)         # for mapping points on maps
-library(gplots)        # for col2hex() function
-library(RColorBrewer)  # for color palettes
-library(sf)            # for working with spatial data
-library(leaflet)       # for highly customizable mapping
-library(ggthemes)      # for more themes (including theme_map())
-library(plotly)        # for the ggplotly() - basic interactivity
-library(gganimate)     # for adding animation layers to ggplots
-library(transformr)    # for "tweening" (gganimate)
-library(gifski)        # need the library for creating gifs but don't need to load each time
+library(tidyverse)     
+library(gardenR)      
+library(lubridate)   
+library(openintro)     
+library(patchwork)    
+library(rvest)        
+library(robotstxt)  
+library(janitor)    
+library(maps)        
+library(ggmap)        
+library(gplots)       
+library(RColorBrewer) 
+library(sf)          
+library(leaflet)       
+library(ggthemes)     
+library(plotly)       
+library(gganimate)    
+library(transformr)   
+library(gifski)      
 library(shiny)
 library(ggrepel)
 theme_set(theme_minimal())
@@ -38,14 +36,7 @@ theme_set(theme_minimal())
 
 ## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r}
-onebed_rent <- read_csv("City_MedianRentalPrice_1Bedroom.csv")
-state_price <- read_csv("Sale_Prices_State.csv")
-```
 Housing in the United States plays a crucial role in the state of our economy. As housing prices reflect neighborhood value, the money poured into housing directly impacts other essential aspects of community development. Things like green space, schools, and public transit all hold significant impacts on the desirability of neighborhoods, thus directly affecting housing prices and public funding. 
 	Americans are currently facing a national surge in housing prices. According to Pew Research Center, nearly 50% of Americans say that affordable housing has become a major problem. While this issue can be seen all across the country and across all age demographics, the problem is most prevalent among young people in urban areas. Cities like New York, Los Angeles, and Boston have become almost completely unaffordable for someone working an entry or lower-level job, forcing people to expand further and further outside city lines. 
 	Despite this vast need for more homes, government spending tends to cater to amenities in already wealthy neighborhoods, rather than affordable units in newly gentrified and increasingly inaccessible areas. Rather than focusing on building more duplexes, affordable apartments, mother-in-law units, and other diverse housing options, we have seen a rapid rise in the gentrification-core buildings that we now know all too well (pictured). 
@@ -53,6 +44,9 @@ Housing in the United States plays a crucial role in the state of our economy. A
 !(Gentrification-Core Building Example)[building_ds.png] 
 
 ```{r}
+onebed_rent <- read_csv("City_MedianRentalPrice_1Bedroom.csv")
+state_price <- read_csv("Sale_Prices_State.csv")
+
 state_price_averages <- state_price %>% 
   mutate( "2008" = rowMeans(select(.,`2008-03`:`2008-12`)), na.rm=TRUE,
           "2009" = rowMeans(select(.,`2009-01`:`2009-12`)), na.rm=TRUE,
@@ -68,21 +62,16 @@ state_price_averages <- state_price %>%
           "2019" = rowMeans(select(.,`2019-01`:`2019-12`)), na.rm=TRUE) %>% 
   select(RegionName, "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019")
 
-state_price_averages
-
-```
-
-```{r}
 mean_price_year <- state_price_averages %>% 
   pivot_longer(cols = -RegionName,
     names_to = "years")
 ```
 
 
-Pictured in an animated map below, we can see the upward trend of housing prices across the US. With the darker shades representing higher prices, it is clear that states with more densely populated urban areas have higher prices on average. Additionally, you can see that the upward trend of prices spreads across the entirety of the US, emphasizing the need for increased housing nationwide. 
+  Pictured in an animated map below, we can see the upward trend of housing prices across the US. With the darker shades representing higher prices, it is clear that states with more densely populated, urban areas, have higher housing prices. Additionally, you can see that the upward trend of prices spreads across the entirety of the US, emphasizing the need for increased housing nationwide. 
 
+```{r, fig.alt= "This animated graph shows the average sale price of houses, by state, for each year 2008-2019. The most expensive homes were consistently found in California each year, and the most inexpensive homes are are found in Oklahoma. The more expensive the average price, the darker it is. The average sale price increases for most homes over this time period. When there is no data the states are gray."}
 
-```{r, fig.alt= "This graph shows the average sale price of houses, by state, for each year 2008-2019. The most expensive homes were consistently found in California each year, and the most inexpensive homes are are found in Oklahoma. The more expensive the average price, the darker it is. The average sale price increases for most homes over this time period. When there is no data the states are gray."}
 states_map<- map_data("state") 
 
 state_price_year <- mean_price_year %>% 
@@ -100,7 +89,8 @@ state_price_year <- mean_price_year %>%
        fill = "Average Sale Price", 
        caption = "Graph by Hannah, Jonah, & Jon, data from Zillow, map from map_data") +
   expand_limits(x = states_map$long, y = states_map$lat) + 
-  scale_fill_viridis_c(option = "rocket", direction = -1) +
+  scale_fill_viridis_c(option = "rocket", direction = -1, labels = scales::comma) +
+  #scale_fill_continuous(labels=scales::comma)+
   theme_map() + 
   theme(legend.background = element_blank()) +
  transition_states(years, transition_length = 0)
@@ -120,17 +110,15 @@ anim_save("state_price_year.gif")
 knitr::include_graphics("state_price_year.gif")
 ```
 
-Line graphs showing the storm effects- 
 
+(talk about graph above here)
 
-
-  With this data, we also wanted to explore the impact of natural disasters on various states. Hurricanes, tornados, and wildfires all drastically impact housing availability and therefore are directly tied to the housing market. While of course there are many other factors that impact housing prices, we thought it would be really interesting to look at the years before and after major natural disasters in the US to see how the housing market could have been impacted.
+With this data, we also wanted to explore the impact of natural disasters on housing prices. Hurricanes, tornados, and wildfires all drastically impact housing availability and therefore are directly tied to the housing market. While of course there are many other factors that impact housing prices, we thought it would be really interesting to look at the years before and after major natural disasters in the US to see how the housing market could have been impacted.
 	Pictures below is a graph showing the housing prices for states all along the east coast before and after Hurricane Sandy. This 2012 hurricane lasted from October 22nd to November 2nd and caused over $65 billion dollars in damages nationwide. With most of its impact being concentrated on the east coast, we can see the effect of the storm on housing availability. Among all of the states affected, New York and New Jersey were hit the hardest and faced a massive loss of homes and infrastructure. 
 	Next, we wanted to examine the effect of the 2018 California wildfires. These fires were the worst in California history, destroying more than 18,000 structures and causing $16.5 billion in damages. 
 	Finally, in order to examine a diverse selection of natural disasters, we looked into the 2011 tornado super outbreak that spread across the Southeast US. Over the course of 3 days from August 25 to 28, there were 360 tornados across Alabama, Mississippi, Tennessee, Arkansas, Georgia, Kentucky, Louisiana, Virginia, and New York. About half were concentrated in Alabama, Mississippi, and Tennessee, and these states saw the most damage from the outbreak. A graph depicting the change in housing prices during this time is shown below. 
 
-
-```{r, fig.width = 13, fig.height = 5}
+```{r, fig.width = 14, fig.height = 5, fig.alt = "This is a line graph showing the average sale price for each state, by month. The months included span from June 2012, to June 2013. The states included are Florida, Georgia, South Carolina, North Carolina, Virginia, Maryland, Deleware, Pennsylvania, New Jersey, New York, Connceticut, Rhode Island, Massacheusettes, New Hampshire, and Maine. There is a dot at Octocber, 2012, to indicate the time when Hurricane Sandy hit these states. The sale price for most states have minimal change with some states slightly increasing and some states slightly decreasing, and others remaining constant."}
 
 price_by_month <- state_price %>% 
   pivot_longer(cols = -c("RegionName", "...1", "RegionID", "SizeRank"),
@@ -173,7 +161,8 @@ hurricane_sandy <- price_by_month %>%
       x = "",
       y = "Average House Price",
       color = "State",
-      fill = "Average Sale Price by Month") +
+      fill = "Average Sale Price by Month", 
+      caption = "Graph by Hannah, Jonah, & Jon, data from Zillow") +
   geom_label_repel(data = sandy_labels,
                    aes(label = RegionName),
                    na.rm = TRUE) +
@@ -218,7 +207,8 @@ wildfires <- price_by_month %>%
       x = "",
       y = "Average House Price",
       color = "State",
-      fill = "Average Sale Price by Month") +
+      fill = "Average Sale Price by Month", 
+      caption = "Graph by Hannah, Jonah, & Jon, data from Zillow") +
   geom_label_repel(data = wildfire_labels,
                    aes(label = RegionName),
                    na.rm = TRUE) +
@@ -258,7 +248,8 @@ hurricane_harvey <- price_by_month %>%
       x = "",
       y = "Average House Price",
       color = "State",
-      fill = "Average Sale Price by Month") +
+      fill = "Average Sale Price by Month",
+      caption = "Graph by Hannah, Jonah, & Jon, data from Zillow") +
   theme(legend.position = "right")
 
 hurricane_harvey
@@ -299,7 +290,8 @@ tornado_outbreak <- price_by_month %>%
       x = "",
       y = "Average House Price",
       color = "State",
-      fill = "Average Sale Price by Month") +
+      fill = "Average Sale Price by Month", 
+      caption = "Graph by Hannah, Jonah, & Jon, data from Zillow") +
   geom_label_repel(data = tornado_labels,
                    aes(label = RegionName),
                    na.rm = TRUE) +
@@ -307,6 +299,9 @@ tornado_outbreak <- price_by_month %>%
 
 tornado_outbreak
 ```
+
+
+
 ```{r}
 city_prices <- read_csv("Sale_Prices_City.csv")
 ```
@@ -337,7 +332,8 @@ boston_bombing <- city_data %>%
   geom_point(data = bombing_points, color = "black", size = 1.5) + 
   labs(title = "Average Boston House Sale Price by Month",
       x = "",
-      y = "Sale Price") +
+      y = "Sale Price", 
+      caption = "Graph by Hannah, Jonah, & Jon, data from Zillow") +
   theme(legend.position = "none")
 
 boston_bombing
@@ -345,5 +341,3 @@ boston_bombing
 
 
 
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
