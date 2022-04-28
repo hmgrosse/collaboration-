@@ -34,7 +34,7 @@ library(ggrepel)
 theme_set(theme_minimal())
 ```
 
-## R Markdown
+## U.S. Housing Prices
 
 
 Housing in the United States plays a crucial role in the state of our economy. As housing prices reflect neighborhood value, the money poured into housing directly impacts other essential aspects of community development. Things like green space, schools, and public transit all hold significant impacts on the desirability of neighborhoods, thus directly affecting housing prices and public funding. 
@@ -172,7 +172,7 @@ hurricane_sandy
 ```
 
 
-```{r, fig.height = 5, fig.width = 13}
+```{r, fig.height = 5, fig.width = 13, fig.alt = This is a line graph showing the average sale price for each state, by month. The months included span from January 2018, to December 2019. The states included are California, Oregon, and Washington. There is a dot at July and August 2018, to indicate the time when the wildfires occured. The sale price for most states have minimal change with Oregon slightly increasing in sale price, Washington slightly decreasing in sale price, and California remaining constant.}
 wildfire_labels <- price_by_month %>% 
    mutate(RegionName = str_to_lower(`RegionName`), 
          na.rm = TRUE) %>% 
@@ -205,7 +205,7 @@ wildfires <- price_by_month %>%
   geom_point(data = wildfire_points, color = "black", size = 1.5) + 
   labs(title = "Average State Sale Price by Month",
       x = "",
-      y = "Average House Price",
+      y = "Average House Sale Price",
       color = "State",
       fill = "Average Sale Price by Month", 
       caption = "Graph by Hannah, Jonah, & Jon, data from Zillow") +
@@ -219,9 +219,8 @@ wildfires
 
 
 
-```{r}
-#this one is adjusted right to the second hurricane
-#this graph is not working - because there is only one state? not sure how to make the line appear- 
+```{r, fig.width = 9, fig.height = 5, fig.alt= "This is a line graph showing the average sale price for each state, by month. The months included span from March 2017, to March 2018. The state included is Texas. There is a dot at August and September, 2017, to indicate the time when Hurricane Harvey hit these states. The sale price for most states have minimal change with some states slightly increasing and some states slightly decreasing, and others remaining constant."}
+ 
 harvey_points <- price_by_month %>% 
    mutate(RegionName = str_to_lower(`RegionName`), 
          na.rm = TRUE) %>% 
